@@ -945,7 +945,7 @@
 
 	<target name="resolve" description="Retrieve dependencies with Apache Ivy">
 		<delete dir="${dir.lib}/ivy" />
-		<ivy:retrieve pattern="${dir.lib}/ivy/[type]/[artifact].[ext]" />
+        <ivy:retrieve pattern="${dir.lib}/ivy/[type]/[artifact](-[classifier]).[ext]"/>
 
 		<antcall target="resolve-import-native">
 			<param name="arch" value="mac-x86_64" />

@@ -43,6 +43,7 @@ import net.filebot.web.SubtitleSearchResult;
 import net.filebot.web.TMDbClient;
 import net.filebot.web.TMDbTVClient;
 import net.filebot.web.TVMazeClient;
+import net.filebot.web.MyAnimeListClient;
 import net.filebot.web.TheTVDBClient;
 import net.filebot.web.VideoHashSubtitleService;
 
@@ -54,6 +55,7 @@ public final class WebServices {
 	// movie sources
 	public static final OMDbClient OMDb = new OMDbClient(getApiKey("omdb"));
 	public static final TMDbClient TheMovieDB = new TMDbClientWithLocalSearch(getApiKey("themoviedb"), Boolean.parseBoolean(System.getProperty("net.filebot.WebServices.TheMovieDB.adult")));
+    public static final MyAnimeListClient MyAnimeList = new MyAnimeListClient();
 
 	// episode sources
 	public static final TVMazeClient TVmaze = new TVMazeClient();
@@ -73,7 +75,7 @@ public final class WebServices {
 	public static final ID3Lookup MediaInfoID3 = new ID3Lookup();
 
 	public static Datasource[] getServices() {
-		return new Datasource[] { TheMovieDB, OMDb, TheTVDB, AniDB, TheMovieDB_TV, TVmaze, AcoustID, MediaInfoID3, LocalDatasource.EXIF, LocalDatasource.XATTR, LocalDatasource.FILE, OpenSubtitles, Shooter, FanartTV };
+		return new Datasource[] { MyAnimeList, TheMovieDB, OMDb, TheTVDB, AniDB, TheMovieDB_TV, TVmaze, AcoustID, MediaInfoID3, LocalDatasource.EXIF, LocalDatasource.XATTR, LocalDatasource.FILE, OpenSubtitles, Shooter, FanartTV };
 	}
 
 	public static MovieIdentificationService[] getMovieIdentificationServices() {
@@ -81,7 +83,7 @@ public final class WebServices {
 	}
 
 	public static EpisodeListProvider[] getEpisodeListProviders() {
-		return new EpisodeListProvider[] { TheTVDB, AniDB, TheMovieDB_TV, TVmaze };
+		return new EpisodeListProvider[] { MyAnimeList, TheTVDB, AniDB, TheMovieDB_TV, TVmaze };
 	}
 
 	public static MusicIdentificationService[] getMusicIdentificationServices() {
