@@ -52,8 +52,6 @@ public class MyAnimeListClient extends AbstractEpisodeListProvider {
     protected List<SearchResult> fetchSearchResult(String query, Locale locale) throws Exception {
         Map<String, Object> requestParams = new HashMap<>();
         requestParams.put("q", query);
-        requestParams.put("order_by", "title");
-        requestParams.put("sort", "asc");
         requestParams.put("limit", 25);
         Object response = readJson(getJikanResource("anime?" + encodeParameters(requestParams, true)));
 
