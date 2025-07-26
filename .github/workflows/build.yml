@@ -66,6 +66,11 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
+      - name: Copy JDK to cache
+        run: |
+          $jdkPath = $env:JAVA_HOME
+          Compress-Archive -Path "$jdkPath\*" -DestinationPath "cache\openjdk-11.0.2_windows-x64_bin.zip"
+
       - name: Set up Apache Ant
         run: choco install ant -y
 
@@ -77,14 +82,11 @@ jobs:
       - name: Install WiX (v4)
         run: dotnet tool install --global wix
 
-      - name: Install PowerShell 7
-        run: choco install powershell-core --version=7.4.3 -y
-
       - name: Install JavaFX 11
         run: |
           mkdir lib\javafx
-          Invoke-WebRequest https://download2.gluonhq.com/openjfx/11.0.2/openjfx-11.0.2_windows-x64_bin-sdk.zip -OutFile javafx.zip
-          Expand-Archive javafx.zip -DestinationPath lib\javafx
+          Invoke-WebRequest https://download2.gluonhq.com/openjfx/11.0.2/openjfx-11.0.2_windows-x64_bin-sdk.zip -OutFile cache\renopenjfx-11.0.2_windows-x64_bin-sdk.zip
+          Expand-Archive cache\openjfx-11.0.2_windows-x64_bin-sdk.zip -DestinationPath lib\javafx
           echo "JAVA_FX_LIB=$(Resolve-Path lib\javafx\javafx-sdk-11.0.2\lib)" | Out-File -FilePath $env:GITHUB_ENV -Append
 
       - name: Build Windows Artifacts
