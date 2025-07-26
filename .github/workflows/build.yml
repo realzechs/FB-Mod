@@ -31,10 +31,18 @@ jobs:
           curl -L -o xz.jar https://repo1.maven.org/maven2/org/tukaani/xz/1.9/xz-1.9.jar
           sudo mv xz.jar /usr/share/ant/lib/
 
-      - name: Install JavaFX
+      - name: Download OpenJDK 11.0.2
         run: |
-          wget https://download2.gluonhq.com/openjfx/11.0.2/openjfx-11.0.2_linux-x64_bin-sdk.zip -O javafx.zip
-          unzip -q javafx.zip -d lib/javafx
+          if [ ! -f cache/openjdk-11.0.2_linux-x64_bin.tar.gz ]; then
+            curl -L https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz -o cache/openjdk-11.0.2_linux-x64_bin.tar.gz
+          fi
+
+      - name: Install JavaFX 11.0.2
+        run: |
+          if [ ! -f cache/openjfx-11.0.2_linux-x64_bin-sdk.zip ]; then
+            curl -L https://download2.gluonhq.com/openjfx/11.0.2/openjfx-11.0.2_linux-x64_bin-sdk.zip -o cache/openjfx-11.0.2_linux-x64_bin-sdk.zip
+          fi
+          unzip -q cache/openjfx-11.0.2_linux-x64_bin-sdk.zip -d lib/javafx
           echo "JAVA_FX_LIB=$(pwd)/lib/javafx/javafx-sdk-11.0.2/lib" >> $GITHUB_ENV
 
       - name: Build Linux Artifacts
@@ -66,11 +74,6 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
-      - name: Copy JDK to cache
-        run: |
-          $jdkPath = $env:JAVA_HOME
-          Compress-Archive -Path "$jdkPath\*" -DestinationPath "cache\openjdk-11.0.2_windows-x64_bin.zip"
-
       - name: Set up Apache Ant
         run: choco install ant -y
 
@@ -82,10 +85,18 @@ jobs:
       - name: Install WiX (v4)
         run: dotnet tool install --global wix
 
-      - name: Install JavaFX 11
+      - name: Download OpenJDK 11.0.2
         run: |
+          if (!(Test-Path cache\openjdk-11.0.2_windows-x64_bin.zip)) {
+            Invoke-WebRequest https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_windows-x64_bin.zip -OutFile cache\openjdk-11.0.2_windows-x64_bin.zip
+          }
+
+      - name: Install JavaFX 11.0.2
+        run: |
+          if (!(Test-Path cache\openjfx-11.0.2_windows-x64_bin-sdk.zip)) {
+            Invoke-WebRequest https://download2.gluonhq.com/openjfx/11.0.2/openjfx-11.0.2_windows-x64_bin-sdk.zip -OutFile cache\openjfx-11.0.2_windows-x64_bin-sdk.zip
+          }
           mkdir lib\javafx
-          Invoke-WebRequest https://download2.gluonhq.com/openjfx/11.0.2/openjfx-11.0.2_windows-x64_bin-sdk.zip -OutFile cache\renopenjfx-11.0.2_windows-x64_bin-sdk.zip
           Expand-Archive cache\openjfx-11.0.2_windows-x64_bin-sdk.zip -DestinationPath lib\javafx
           echo "JAVA_FX_LIB=$(Resolve-Path lib\javafx\javafx-sdk-11.0.2\lib)" | Out-File -FilePath $env:GITHUB_ENV -Append
 
