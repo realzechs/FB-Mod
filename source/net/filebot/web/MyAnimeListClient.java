@@ -98,7 +98,7 @@ public class MyAnimeListClient extends AbstractEpisodeListProvider {
         int page = 1;
         boolean hasNextPage = true;
         do {
-            System.out.println(series.getName() + " (" + page + ")");
+            // System.out.println(series.getName() + " (" + page + ")");
             Object episodesResponse = readJson(getJikanResource("anime/" + series.getId() + "/episodes?page=" + page));
 
             streamJsonObjects(episodesResponse, "data").forEach(episode -> {
